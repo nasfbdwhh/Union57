@@ -1,0 +1,1080 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEBIX | Tienda Digital de Plantillas y Código</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ==========================================
+           VARIABLES Y ESTILOS GLOBALES
+           ========================================== */
+        :root {
+            --bg-dark: #050811;
+            --bg-card: rgba(10, 16, 32, 0.65);
+            --electric-blue: #00d2ff;
+            --deep-blue: #0055ff;
+            --accent-yellow: #ffcc00;
+            --glow-yellow: rgba(255, 204, 0, 0.4);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-glow: rgba(0, 210, 255, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --font-title: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            font-size: 18px;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Canvas de Partículas en Fondo */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Utilidades Glassmorphism */
+        .glass-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .glow-effect {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .glow-effect:hover {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 20px var(--border-glow), inset 0 0 10px rgba(0, 210, 255, 0.2);
+        }
+
+        /* Botones Futuristas */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 28px;
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-decoration: none;
+            text-transform: uppercase;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--deep-blue), var(--electric-blue));
+            color: #fff;
+            box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-yellow);
+            border: 2px solid var(--accent-yellow);
+            box-shadow: 0 0 10px var(--glow-yellow);
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-yellow);
+            color: #000;
+            box-shadow: 0 0 25px var(--accent-yellow);
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--electric-blue);
+            color: var(--electric-blue);
+            background: rgba(0, 210, 255, 0.1);
+        }
+
+        .btn-admin {
+            background: #8b5cf6;
+            color: white;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.4);
+        }
+
+        .btn-admin:hover {
+            background: #7c3aed;
+            box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+        }
+
+        /* Titulos de Sección */
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .section-title h2 {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--electric-blue), transparent);
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        /* ==========================================
+           HEADER / NAVBAR
+           ========================================== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 15px 5%;
+            transition: all 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(5, 8, 17, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: var(--font-title);
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #fff;
+            text-decoration: none;
+            letter-spacing: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            color: var(--electric-blue);
+            text-shadow: 0 0 10px var(--electric-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--electric-blue);
+            text-shadow: 0 0 8px var(--electric-blue);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        /* ==========================================
+           HERO SECTION
+           ========================================== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+
+        .hero-content {
+            max-width: 900px;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-title);
+            color: var(--accent-yellow);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+            text-shadow: 0 0 10px var(--glow-yellow);
+        }
+
+        .hero-title {
+            font-family: var(--font-title);
+            font-size: 4rem;
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 25px;
+            background: linear-gradient(180deg, #ffffff 30%, var(--electric-blue) 100%);
+          -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(0, 210, 255, 0.3);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* ==========================================
+           SERVICIOS
+           ========================================== */
+        .services {
+            padding: 100px 5%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .service-card {
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            color: var(--electric-blue);
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px var(--electric-blue);
+        }
+
+        .service-card h3 {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .service-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        /* ==========================================
+           CATÁLOGO DE PRODUCTOS
+           ========================================== */
+        .catalog {
+            padding: 100px 5%;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .controls-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            outline: none;
+            transition: border 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 10px var(--border-glow);
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-family: var(--font-title);
+            font-size: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn.active, .filter-btn:hover {
+            background: var(--electric-blue);
+            color: #000;
+            border-color: var(--electric-blue);
+            box-shadow: 0 0 12px var(--electric-blue);
+            font-weight: 700;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-img-wrapper {
+            position: relative;
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+        }
+
+        .product-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-img {
+            transform: scale(1.08);
+        }
+
+        .product-category {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(5, 8, 17, 0.85);
+            border: 1px solid var(--electric-blue);
+            color: var(--electric-blue);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-family: var(--font-title);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+
+        .product-details {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .product-title {
+            font-family: var(--font-title);
+            font-size: 1.3rem;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .product-price-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .product-price {
+            font-family: var(--font-title);
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent-yellow);
+            text-shadow: 0 0 8px var(--glow-yellow);
+        }
+
+        .product-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        /* ==========================================
+           FORMULARIOS (Panel de Control)
+           ========================================== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-family: var(--font-title);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: var(--electric-blue);
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: #fff;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--electric-blue);
+        }
+
+        /* ==========================================
+           FOOTER Y CONTACTO
+           ========================================== */
+        footer {
+            padding: 60px 5% 30px;
+            border-top: 1px solid var(--glass-border);
+            background: rgba(2, 4, 10, 0.95);
+        }
+
+        .footer-content {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .footer-info p {
+            color: var(--text-muted);
+            margin-top: 10px;
+            max-width: 400px;
+        }
+
+        .copyright {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* ==========================================
+           MODALES (COMPRA Y ADMIN)
+           ========================================== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            width: 100%;
+            max-width: 550px;
+            padding: 35px;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        .payment-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .payment-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-family: var(--font-title);
+            font-weight: 700;
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .payment-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .btn-buymeacoffee {
+            background: #FFDD00;
+            color: #000;
+            box-shadow: 0 0 15px rgba(255, 221, 0, 0.4);
+        }
+
+        .btn-payhip {
+            background: #FF7640;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(255, 118, 64, 0.4);
+        }
+
+        .product-price-tag {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-family: var(--font-title);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        .product-price-tag.tag-paga {
+            background: rgba(5, 8, 17, 0.85);
+            border: 1px solid var(--accent-yellow);
+            color: var(--accent-yellow);
+        }
+
+        .product-price-tag.tag-gratis {
+            background: rgba(5, 8, 17, 0.85);
+            border: 1px solid #22c55e;
+            color: #22c55e;
+        }
+
+        .admin-product-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            background: rgba(255,255,255,0.03);
+        }
+        .admin-product-info { flex: 1; min-width: 0; }
+        .admin-product-info strong {
+            display: block;
+            color: #fff;
+            font-family: var(--font-title);
+            font-size: .9rem;
+        }
+        .admin-product-info small { color: var(--text-muted); }
+        .admin-product-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+        .admin-product-actions button { padding: 8px 12px; font-size: .72rem; }
+
+        /* ==========================================
+           RESPONSIVE DESIGN
+           ========================================== */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                width: 80%;
+                height: calc(100vh - 70px);
+                background: rgba(5, 8, 17, 0.95);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                justify-content: center;
+                transition: right 0.4s ease;
+                border-left: 1px solid var(--glass-border);
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            .hamburger {
+                display: block;
+            }
+
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+  <canvas id="particles-canvas"></canvas>
+
+    <header id="header">
+        <div class="nav-container">
+            <a href="#" class="logo"><i class="fa-solid fa-code"></i> WEBIX<span>.</span></a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#hero" onclick="toggleMenu()">Inicio</a></li>
+                <li><a href="#catalogo" onclick="toggleMenu()">HTML</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger" onclick="toggleMenu()">
+                <i class="fa-solid fa-bars"></i>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">HTML & Código</div>
+            <h1 class="hero-title">Holiwis</h1>
+            <p style="color: var(--text-muted); font-size: 1.2rem; max-width: 700px; margin: 0 auto 30px;">
+                Adquiere código HTML5/CSS3/JS de alto rendimiento, listo para implementar.
+            </p>
+            <div class="hero-buttons">
+                <a href="#catalogo" class="btn btn-primary"><i class="fa-solid fa-store"></i> VER CATÁLOGO</a>
+                <a href="#catalogo" class="btn btn-secondary"><i class="fa-solid fa-cart-shopping"></i> COMPRAR HTML</a>
+            </div>
+            <div class="hero-buttons" id="storeLinksButtons" style="margin-top: 15px;"></div>
+        </div>
+    </section>
+<section class="catalog" id="catalogo">
+        <div class="section-title">
+            <h2>Catálogo HTML</h2>
+            <p>Plantillas HTML listas para usar</p>
+        </div>
+        <div class="controls-bar glass-panel">
+            <div class="search-box">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="searchInput" placeholder="Buscar plantilla HTML..." onkeyup="filterProducts()">
+            </div>
+            <div class="filter-buttons" id="filterContainer">
+                <button class="filter-btn active" onclick="filterCategory('all')">Todos los HTML</button>
+                <button class="filter-btn" onclick="filterCategory('HTML')">Plantillas HTML</button>
+            </div>
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            </div>
+    </section>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info">
+                <a href="#" class="logo"><i class="fa-solid fa-code"></i> WEBIX<span>.</span></a>
+                <p>Tienda digital especializada en la venta de plantillas HTML y código.</p>
+            </div>
+            <div>
+                <button class="btn btn-outline" onclick="contactWhatsAppDirect()"><i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp</button>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 WEBIX. Todos los derechos reservados. Tienda de productos digitales.
+        </div>
+    </footer>
+
+    <div class="modal" id="buyModal">
+        <div class="modal-content glass-panel">
+            <button class="modal-close" onclick="closeBuyModal()">&times;</button>
+            <h3 style="font-family: var(--font-title); color: #fff; margin-bottom: 10px;" id="modalProdTitle">Nombre del Producto</h3>
+            <p style="color: var(--accent-yellow); font-family: var(--font-title); font-size: 1.4rem; font-weight: 700;" id="modalProdPrice">$0 USD</p>
+            <p style="color: var(--text-muted); margin-top: 15px; font-size: 0.95rem;">Selecciona cómo querés pagar para completar tu compra:</p>
+            
+            <div class="payment-options">
+                <a href="#" id="modalBMCBtn" target="_blank" class="payment-btn btn-buymeacoffee">
+                    <i class="fa-solid fa-mug-hot"></i> Comprar en Buy Me a Coffee
+                </a>
+                <a href="#" id="modalPayhipBtn" target="_blank" class="payment-btn btn-payhip">
+                    <i class="fa-solid fa-bag-shopping"></i> Comprar en PayHip
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ==========================================
+           DATOS DEL SITIO (SE EDITAN DESDE admin.html)
+           No tocar a mano: usá admin.html y exportá este archivo de nuevo.
+           ========================================== */
+        const SITE_DATA = /*__SITE_DATA_START__*/{
+            "config": {
+                "phone": "5491122334455",
+                "bmc": "",
+                "payhip": "",
+                "siteName": "WEBIX",
+                "heroTitle": "Holiwis",
+                "heroText": "Adquiere código HTML5/CSS3/JS de alto rendimiento, listo para implementar."
+            },
+            "products": []
+        }/*__SITE_DATA_END__*/;
+
+        let products = SITE_DATA.products.filter(p => !p.category || p.category === 'HTML');
+        let config = SITE_DATA.config;
+
+        /* ==========================================
+           RENDERIZADO DE PRODUCTOS
+           ========================================== */
+function renderProducts(itemsToRender = products) {
+            const container = document.getElementById('productsGrid');
+            container.innerHTML = '';
+
+            if(itemsToRender.length === 0) {
+                container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: var(--text-muted);">No se encontraron productos en esta categoría.</p>`;
+                return;
+            }
+
+            itemsToRender.forEach(prod => {
+                const isFree = !!prod.isFree;
+                const card = document.createElement('div');
+                card.className = 'product-card glass-panel glow-effect';
+
+                const videoBtn = prod.videoLink
+                    ? `<a href="${prod.videoLink}" target="_blank" class="btn btn-outline" style="font-size: 0.75rem;"><i class="fa-brands fa-youtube"></i> Video</a>`
+                    : '';
+
+                const actionBtn = isFree
+                    ? `<button class="btn btn-primary" style="font-size: 0.75rem;" onclick="downloadProduct(${prod.id})"><i class="fa-solid fa-download"></i> Descargar</button>`
+                    : `<button class="btn btn-primary" style="font-size: 0.75rem;" onclick="openBuyModal(${prod.id})"><i class="fa-solid fa-cart-shopping"></i> Comprar</button>`;
+
+                card.innerHTML = `
+                    <div class="product-img-wrapper">
+                        <img src="${prod.img}" alt="${prod.title}" class="product-img">
+                        <span class="product-category">${prod.category}</span>
+                        <span class="product-price-tag ${isFree ? 'tag-gratis' : 'tag-paga'}">${isFree ? 'Gratis' : 'Paga'}</span>
+                    </div>
+                    <div class="product-details">
+                        <h3 class="product-title">${prod.title}</h3>
+                        <p class="product-desc">${prod.desc}</p>
+                        <div class="product-price-row">
+                            <span class="product-price">${isFree ? 'GRATIS' : `$${prod.price} USD`}</span>
+                        </div>
+                        <div class="product-actions">
+                            ${videoBtn}
+                            ${actionBtn}
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        /* ==========================================
+           FILTROS Y BÚSQUEDA
+           ========================================== */
+        let currentCategory = 'HTML';
+
+        function filterCategory(cat) {
+            currentCategory = 'HTML';
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            filterProducts();
+        }
+
+        function filterProducts() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = products.filter(p => {
+                const matchesCat = true;
+                const matchesSearch = p.title.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query);
+                return matchesCat && matchesSearch;
+            });
+            renderProducts(filtered);
+        }
+
+        /* ==========================================
+           SISTEMA DE MODAL DE COMPRA
+           ========================================== */
+        let selectedProductForBuy = null;
+
+        function openBuyModal(productId) {
+            selectedProductForBuy = products.find(p => p.id === productId);
+            if(!selectedProductForBuy) return;
+
+            document.getElementById('modalProdTitle').innerText = selectedProductForBuy.title;
+            document.getElementById('modalProdPrice').innerText = `$${selectedProductForBuy.price} USD`;
+
+            const bmcLink = selectedProductForBuy.bmcLink || config.bmc;
+            const payhipLink = selectedProductForBuy.payhipLink || config.payhip;
+
+            const bmcBtn = document.getElementById('modalBMCBtn');
+            if (bmcLink) {
+                bmcBtn.href = bmcLink;
+                bmcBtn.style.display = 'flex';
+            } else {
+                bmcBtn.style.display = 'none';
+            }
+
+            const payhipBtn = document.getElementById('modalPayhipBtn');
+            if (payhipLink) {
+                payhipBtn.href = payhipLink;
+                payhipBtn.style.display = 'flex';
+            } else {
+                payhipBtn.style.display = 'none';
+            }
+
+            document.getElementById('buyModal').classList.add('active');
+        }
+      function closeBuyModal() {
+            document.getElementById('buyModal').classList.remove('active');
+        }
+
+        /* ==========================================
+           DESCARGA DE ARCHIVOS GRATUITOS
+           ========================================== */
+        function downloadProduct(productId) {
+            const prod = products.find(p => p.id === productId);
+            if (!prod) return;
+
+            if (prod.fileData) {
+                const link = document.createElement('a');
+                link.href = prod.fileData;
+                link.download = prod.fileName || `${prod.title}`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else if (prod.fileLink) {
+                window.open(prod.fileLink, '_blank');
+            } else {
+                alert('Este producto todavía no tiene un archivo o enlace de descarga cargado.');
+            }
+        }
+
+        /* ==========================================
+           WHATSAPP
+           ========================================== */
+        function contactWhatsAppDirect() {
+            const text = encodeURIComponent("Hola WEBIX, tengo una consulta sobre sus plantillas y códigos.");
+            window.open(`https://wa.me/${config.phone}?text=${text}`, '_blank');
+        }
+
+        function applySiteSettings() {
+            const logoTexts = document.querySelectorAll('.logo');
+            logoTexts.forEach(el => {
+                const icon = el.querySelector('i');
+                el.innerHTML = '';
+                if (icon) el.appendChild(icon);
+                el.append(document.createTextNode(' ' + (config.siteName || 'WEBIX') + '.'));
+            });
+
+            const heroTitle = document.querySelector('.hero-title');
+            const heroText = document.querySelector('.hero-content p');
+            if (heroTitle) heroTitle.innerText = config.heroTitle || 'Holiwis';
+            if (heroText) heroText.innerText = config.heroText || '';
+
+            const storeButtons = document.getElementById('storeLinksButtons');
+            if (storeButtons) {
+                let html = '';
+                if (config.bmc) {
+                    html += `<a href="${config.bmc}" target="_blank" class="btn btn-buymeacoffee"><i class="fa-solid fa-mug-hot"></i> IR A BUY ME A COFFEE</a>`;
+                }
+                if (config.payhip) {
+                    html += `<a href="${config.payhip}" target="_blank" class="btn btn-payhip"><i class="fa-solid fa-bag-shopping"></i> IR A PAYHIP</a>`;
+                }
+                storeButtons.innerHTML = html;
+            }
+        }
+
+
+        /* ==========================================
+           INTERFAZ Y NAVEGACIÓN
+           ========================================== */
+    function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        /* ==========================================
+           CANVAS DE PARTÍCULAS
+           ========================================== */
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        const particles = [];
+        const particleCount = 60;
+
+        for (let i = 0; i < particleCount; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2 + 1,
+                dx: (Math.random() - 0.5) * 0.8,
+                dy: (Math.random() - 0.5) * 0.8,
+                alpha: Math.random() * 0.5 + 0.2
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            particles.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(0, 210, 255, ${p.alpha})`;
+                ctx.fill();
+
+                p.x += p.dx;
+                p.y += p.dy;
+
+                if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+                if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+            });
+
+            requestAnimationFrame(animateParticles);
+        }
+
+        // Inicialización
+        renderProducts();
+        applySiteSettings();
+        animateParticles();
+    </script>
+</body>
+</html>
